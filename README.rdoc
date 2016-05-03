@@ -36,10 +36,6 @@ Thanks to everyone for their interest and time in committing to making this plug
 
 Please let me know if I missed you.
 
-Reffered links
-http://stackoverflow.com/questions/16590155/rails-decorators-overriding-a-rails-engine
-
-
 == Copyright
 
 Copyright (c) 2016, released under the MIT license.
