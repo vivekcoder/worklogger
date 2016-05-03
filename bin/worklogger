@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+require 'work_logger'
+
+command = ARGV[0]
+
+case command
+when nil
+  file = File.open('options.txt', 'rb')
+  content = file.read
+  puts content
+
+when '-h', '--help'
+  file = File.open('README.rdoc', 'rb')
+  content = file.read
+  puts content
+
+when 'init', 'initialize'
+  Worklogger.make_me_lazy
+end

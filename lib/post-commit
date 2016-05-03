@@ -1,0 +1,90 @@
+#!/bin/bash
+echo 'A system developed by Vivek Tripathi lets you add a worklog with the description same as comment'
+MESSAGE=$(git log -1 HEAD --pretty=format:%s)
+
+prefix="issue="
+MESSAGE=${MESSAGE#$prefix}
+ISSUE_KEY=$(echo $MESSAGE| cut -d ' ' -f 1)
+JIRA_USER_NAME=$USER_NAME
+JIRA_PASSWORD=$PASSWORD
+CORPORATE_URL=$CORPORATE_URL
+
+time_spent="time="
+TIME_SPENT=$(echo $MESSAGE | grep -o "$time_spent.*" | cut -d " " -f 1 | cut -d "=" -f 2)
+
+COMMIT_MSG=$(echo $MESSAGE | cut -d " " -f3-)
+
+jira_rest_get_issues(){
+ruby <<EOF
+  require 'rubygems'
+  require 'net/http'
+  require 'net/https'
+  require 'json'
+  require 'uri'
+  require 'date'
+
+  issue_key = "$1"
+  time_spent = "$2"
+  commit_message = "$3"
+  jira_username = "$4"
+  jira_password = "$5"
+  corporate_url= "$6"
+
+  ## format time spent from say 2h10m to 2h 10m(added space)
+  time_spent_dup = time_spent.dup
+  index_of_h = time_spent_dup.index('h')
+  if !index_of_h.nil?
+      time_spent = time_spent_dup.insert(index_of_h + 1, ' ')
+  end
+
+  jira_url = "#{corporate_url}/rest/api/latest/issue/"
+  issue_keys = %w[issue_key]
+  json_ext = ".json"
+
+  for issue in issue_keys
+
+      uri = URI.parse("#{corporate_url}/rest/auth/1/session")
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      request = Net::HTTP::Get.new(uri.to_s)
+      request.basic_auth jira_username.to_s, URI.decode(jira_password.to_s)
+      request['Content-Type'] = 'application/json'
+      response = http.request(request)
+      worklog = {
+          comment: commit_message.to_s,
+          started: DateTime.now.strftime("%Y-%m-%dT%H:%M:%S.%L%z"),
+          timeSpent: time_spent.to_s,
+      }.to_json
+
+
+      if response.code =~ /20[0-9]{1}/
+          data = JSON.parse(response.body)
+          fields = data.keys
+
+          uri = URI.parse("#{corporate_url}/rest/api/2/issue/#{issue_key}/worklog")
+          https = Net::HTTP.new(uri.host, uri.port)
+          https.use_ssl = true
+          req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
+          req.basic_auth jira_username.to_s, URI.decode(jira_password.to_s)
+          req.body = "#{worklog}"
+          res = https.request(req)
+          puts "Response #{res.code} #{res.message}: #{res.body}"
+
+          puts "\n"#extra line feed for readability
+          case res
+          when Net::HTTPRedirection
+            # repeat the request using response['Location']
+          when Net::HTTPSuccess
+            repo_info = JSON.parse res.body
+          else
+            # response code isn't a 200; raise an exception
+            res.error!
+          end
+      else
+       raise StandardError, "Unsuccessful response code " + response.code + " for issue " + issue
+      end
+  end
+EOF
+}
+
+jira_rest_get_issues $ISSUE_KEY $TIME_SPENT "$COMMIT_MSG" $JIRA_USER_NAME $JIRA_PASSWORD $CORPORATE_URL

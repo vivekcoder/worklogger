@@ -1,0 +1,45 @@
+= WorkLogger
+We have come up with a system that logs our work in JIRA automatically when we commit changes in git.
+
+== Installation
+Once your project is initialized with Git, your project folder shall contain a hidden folder called .git
+
+1. Install ruby through RVM.
+  rvm install <version_name>
+
+2. Save your JIRA username and password in environment. (For linux, run "sudo vim ~/.bashrc" and add  the following lines at the end of file)
+  export USER_NAME="your user name"
+  export PASSWORD="your jira password"
+  export CORPORATE_URL="your corporate url"
+
+Restart the terminal window after setting up the above credentials.
+3. run 'worklogger'
+
+All set! Now exit the terminal and login again and you are good to go!
+
+Now every time you wish to log your work, just commit with following syntax and see the magic happen:
+
+  git commit -m "issue=ABC-100 time=3h30m commit message goes here"
+
+== Note on Patches/Pull Requests
+
+* Fork the project.
+* Make your feature addition or bug fix.
+* Send me a pull request.
+
+
+== Contributers
+
+Thanks to everyone for their interest and time in committing to making this plugin better.
+
+* vivektripathi (Vivek Tripathi) - vivek.tripathi@softway.com
+
+Please let me know if I missed you.
+
+Reffered links
+http://stackoverflow.com/questions/16590155/rails-decorators-overriding-a-rails-engine
+
+
+== Copyright
+
+Copyright (c) 2016, released under the MIT license.
