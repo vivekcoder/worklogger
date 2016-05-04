@@ -12,14 +12,26 @@ Once your project is initialized with Git, your project folder shall contain a h
   export PASSWORD="your jira password"
   export CORPORATE_URL="your corporate url"
 
-Restart the terminal window after setting up the above credentials.
-3. run 'worklogger'
+  Restart the terminal window after setting up the above credentials.
+3. Intall worklogger
 
-All set! Now exit the terminal and login again and you are good to go!
+  gem install worklogger
 
-Now every time you wish to log your work, just commit with following syntax and see the magic happen:
+== Usage
+  To begin, do
+
+    worklogger init
+
+  Now every time you wish to log your work, just commit with following syntax and see the magic happen:
 
   git commit -m "issue=ABC-100 time=3h30m commit message goes here"
+
+  For standalone logging of work,
+
+    worklogger log
+
+  All set! Now exit the terminal and login again and you are good to go!
+
 
 == Note on Patches/Pull Requests
 
@@ -30,11 +42,12 @@ Now every time you wish to log your work, just commit with following syntax and 
 
 == Contributers
 
-Thanks to everyone for their interest and time in committing to making this plugin better.
-
 * vivektripathi (Vivek Tripathi) - vivek.tripathi@softway.com
 
-Please let me know if I missed you.
+Thanks to everyone for their interest and their valuable feedback.
+
+* abhilash (Abhilash M Kurup) - abhilashm.kurup@softway.com
+* amitkumarjangu (Amit kumar Jangu) - amitkumarjangu@softway.com
 
 == Copyright
 
