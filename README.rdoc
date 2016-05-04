@@ -1,5 +1,5 @@
 = WorkLogger
-We have come up with a system that logs our work in JIRA automatically when we commit changes in git.
+Worklogger is a system that logs your work in JIRA automatically when you commit changes in git. Work can be logged also when you don't want to commit your code but still log your work against any issue on JIRA.
 
 == Installation
 Once your project is initialized with Git, your project folder shall contain a hidden folder called .git
@@ -13,12 +13,12 @@ Save your JIRA username and password in environment. (For linux, run "sudo vim ~
   export CORPORATE_URL="your corporate url"
 
   Restart the terminal window after setting up the above credentials.
-Intall worklogger
+Install worklogger
 
   gem install worklogger
 
 == Usage
-To begin, do
+To begin using with git commit, do
 
     worklogger init
 
