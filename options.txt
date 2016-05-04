@@ -2,6 +2,15 @@ available options:
 [-h, --help] -> help
 [init, intialize] -> setup
 
+####################################################
+For standalone logging without committing your code
+
+worklogger -i ABC-200 -t 3h50m -m "Message"
+-i -> issue key
+-t -> Time spent
+-m -> message for work log(in quotes)
+####################################################
+
 After Setup, every time you wish to log your work, just commit with following syntax and see the magic happen:
 
 git commit -m "issue=ABC-100 time=3h30m commit message goes here"

@@ -1,6 +1,75 @@
 #!/usr/bin/env ruby
 
 require 'work_logger'
+require 'pry'
+require 'rubygems'
+require 'net/http'
+require 'net/https'
+require 'json'
+require 'uri'
+require 'date'
+
+
+def log_work issue_key, time_spent, commit_message
+  jira_username = ENV['USER_NAME']
+  jira_password = ENV['PASSWORD']
+  corporate_url= ENV['CORPORATE_URL']
+
+  ## format time spent from say 2h10m to 2h 10m(added space)
+  time_spent_dup = time_spent.dup
+  index_of_h = time_spent_dup.index('h')
+  if !index_of_h.nil?
+      time_spent = time_spent_dup.insert(index_of_h + 1, ' ')
+  end
+
+  jira_url = "#{corporate_url}/rest/api/latest/issue/"
+  issue_keys = %w[issue_key]
+  json_ext = ".json"
+
+  for issue in issue_keys
+
+    uri = URI.parse("#{corporate_url}/rest/auth/1/session")
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    request = Net::HTTP::Get.new(uri.to_s)
+    request.basic_auth jira_username.to_s, URI.decode(jira_password.to_s)
+    request['Content-Type'] = 'application/json'
+    response = http.request(request)
+    worklog = {
+        comment: commit_message.to_s,
+        started: DateTime.now.strftime("%Y-%m-%dT%H:%M:%S.%L%z"),
+        timeSpent: time_spent.to_s,
+    }.to_json
+
+
+    if response.code =~ /20[0-9]{1}/
+      data = JSON.parse(response.body)
+      fields = data.keys
+
+      uri = URI.parse("#{corporate_url}/rest/api/2/issue/#{issue_key}/worklog")
+      https = Net::HTTP.new(uri.host, uri.port)
+      https.use_ssl = true
+      req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
+      req.basic_auth jira_username.to_s, URI.decode(jira_password.to_s)
+      req.body = "#{worklog}"
+      res = https.request(req)
+      puts "Response #{res.code} #{res.message}: #{res.body}"
+
+      puts "\n"#extra line feed for readability
+      case res
+      when Net::HTTPRedirection
+        # repeat the request using response['Location']
+      when Net::HTTPSuccess
+        repo_info = JSON.parse res.body
+      else
+        # response code isn't a 200; raise an exception
+        res.error!
+      end
+    else
+     raise StandardError, "Unsuccessful response code " + response.code + " for issue " + issue
+    end
+  end
+end
 
 command = ARGV[0]
 
@@ -17,4 +86,25 @@ when '-h', '--help'
 
 when 'init', 'initialize'
   Worklogger.make_me_lazy
+
+when '-i'
+  if ARGV[1] == '-t' || ARGV[1] == '-m'
+    puts 'Enter issue_key'
+    issue_key = STDIN.gets.chomp
+  else
+    issue_key = ARGV[1]
+  end
+  if ARGV[2].nil? || ARGV[2] != '-t'
+    puts 'Enter time spent:'
+    time_spent = STDIN.gets.chomp
+  else
+    time_spent = ARGV[3]
+  end
+  if ARGV[4].nil? || ARGV[4] != '-m'
+    puts 'Enter message for work log:'
+    message = STDIN.gets.chomp
+  else
+    message = ARGV[5]
+  end
+  log_work(issue_key, time_spent, message)
 end
