@@ -87,24 +87,15 @@ when '-h', '--help'
 when 'init', 'initialize'
   Worklogger.make_me_lazy
 
-when '-i'
-  if ARGV[1] == '-t' || ARGV[1] == '-m'
-    puts 'Enter issue_key'
-    issue_key = STDIN.gets.chomp
-  else
-    issue_key = ARGV[1]
-  end
-  if ARGV[2].nil? || ARGV[2] != '-t'
-    puts 'Enter time spent:'
-    time_spent = STDIN.gets.chomp
-  else
-    time_spent = ARGV[3]
-  end
-  if ARGV[4].nil? || ARGV[4] != '-m'
-    puts 'Enter message for work log:'
-    message = STDIN.gets.chomp
-  else
-    message = ARGV[5]
-  end
+when 'log'
+  puts 'Enter issue_key'
+  issue_key = STDIN.gets.chomp.upcase
+
+  puts 'Enter time spent:'
+  time_spent = STDIN.gets.chomp
+
+  puts 'Enter message for work log:'
+  message = STDIN.gets.chomp
+
   log_work(issue_key, time_spent, message)
 end
