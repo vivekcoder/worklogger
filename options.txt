@@ -1,14 +1,12 @@
 available options:
 [-h, --help] -> help
 [init, intialize] -> setup
+[log] -> log work
 
 ####################################################
 For standalone logging without committing your code
 
-worklogger -i ABC-200 -t 3h50m -m "Message"
--i -> issue key
--t -> Time spent
--m -> message for work log(in quotes)
+worklogger log
 ####################################################
 
 After Setup, every time you wish to log your work, just commit with following syntax and see the magic happen:
