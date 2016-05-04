@@ -4,33 +4,33 @@ We have come up with a system that logs our work in JIRA automatically when we c
 == Installation
 Once your project is initialized with Git, your project folder shall contain a hidden folder called .git
 
-1. Install ruby through RVM.
+Install ruby through RVM.
   rvm install <version_name>
 
-2. Save your JIRA username and password in environment. (For linux, run "sudo vim ~/.bashrc" and add  the following lines at the end of file)
+Save your JIRA username and password in environment. (For linux, run "sudo vim ~/.bashrc" and add  the following lines at the end of file)
   export USER_NAME="your user name"
   export PASSWORD="your jira password"
   export CORPORATE_URL="your corporate url"
 
   Restart the terminal window after setting up the above credentials.
-3. Intall worklogger
+Intall worklogger
 
   gem install worklogger
 
 == Usage
-  To begin, do
+To begin, do
 
     worklogger init
 
-  Now every time you wish to log your work, just commit with following syntax and see the magic happen:
+Now every time you wish to log your work, just commit with following syntax and see the magic happen:
 
   git commit -m "issue=ABC-100 time=3h30m commit message goes here"
 
-  For standalone logging of work,
+For standalone logging of work,
 
     worklogger log
 
-  All set! Now exit the terminal and login again and you are good to go!
+All set! Now exit the terminal and login again and you are good to go!
 
 
 == Note on Patches/Pull Requests
