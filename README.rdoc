@@ -30,9 +30,6 @@ For standalone logging of work,
 
     worklogger log
 
-All set! Now exit the terminal and login again and you are good to go!
-
-
 == Note on Patches/Pull Requests
 
 * Fork the project.
@@ -42,10 +39,8 @@ All set! Now exit the terminal and login again and you are good to go!
 
 == Contributers
 
-* vivektripathi (Vivek Tripathi) - vivek.tripathi@softway.com
-
 Thanks to everyone for their interest and their valuable feedback.
-
+* vivektripathi (Vivek Tripathi) - vivek.tripathi@softway.com
 * abhilash (Abhilash M Kurup) - abhilashm.kurup@softway.com
 * amitkumarjangu (Amit kumar Jangu) - amitkumarjangu@softway.com
 
