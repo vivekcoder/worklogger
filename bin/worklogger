@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'work_logger'
-require 'pry'
+require 'worklogger'
 require 'rubygems'
 require 'net/http'
 require 'net/https'
@@ -75,12 +74,14 @@ command = ARGV[0]
 
 case command
 when nil
-  file = File.open('options.txt', 'rb')
+  options_path = File.join(File.dirname(__FILE__), '../options.txt')
+  file = File.open(options_path, 'rb')
   content = file.read
   puts content
 
 when '-h', '--help'
-  file = File.open('README.rdoc', 'rb')
+  read_me_path = File.join(File.dirname(__FILE__), '../README.rdoc')
+  file = File.open(read_me_path, 'rb')
   content = file.read
   puts content
 

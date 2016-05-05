@@ -1,5 +1,6 @@
 class Worklogger
   def self.make_me_lazy
-    system 'cp post-commit .git/hooks/'
+    post_commit_path = File.join(File.dirname(__FILE__), '/post-commit')
+    system "cp #{post_commit_path} .git/hooks/"
   end
 end

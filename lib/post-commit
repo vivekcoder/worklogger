@@ -1,9 +1,8 @@
 #!/bin/bash
-echo 'A system developed by Vivek Tripathi lets you add a worklog with the description same as comment'
-MESSAGE=$(git log -1 HEAD --pretty=format:%s)
+INITIAL_MESSAGE=$(git log -1 HEAD --pretty=format:%s)
 
 prefix="issue="
-MESSAGE=${MESSAGE#$prefix}
+MESSAGE=${INITIAL_MESSAGE#$prefix}
 ISSUE_KEY=$(echo $MESSAGE| cut -d ' ' -f 1)
 JIRA_USER_NAME=$USER_NAME
 JIRA_PASSWORD=$PASSWORD
@@ -14,6 +13,21 @@ TIME_SPENT=$(echo $MESSAGE | grep -o "$time_spent.*" | cut -d " " -f 1 | cut -d 
 
 COMMIT_MSG=$(echo $MESSAGE | cut -d " " -f3-)
 
+# contains(string, substring)
+#
+# Returns 0 if the specified string contains the specified substring,
+# otherwise returns 1.
+contains() {
+    string=$1
+    substring=$2
+    if test "${string#*$substring}" != "$string"
+    then
+        return 0    # $substring is in $string
+    else
+        return 1    # $substring is not in $string
+    fi
+}
+
 jira_rest_get_issues(){
 ruby <<EOF
   require 'rubygems'
@@ -23,6 +37,7 @@ ruby <<EOF
   require 'uri'
   require 'date'
 
+  puts 'A system developed by Vivek Tripathi lets you add a worklog with the description same as comment'
   issue_key = "$1"
   time_spent = "$2"
   commit_message = "$3"
@@ -87,4 +102,4 @@ ruby <<EOF
 EOF
 }
 
-jira_rest_get_issues $ISSUE_KEY $TIME_SPENT "$COMMIT_MSG" $JIRA_USER_NAME $JIRA_PASSWORD $CORPORATE_URL
+contains "echo $INITIAL_MESSAGE" "issue=" && jira_rest_get_issues $ISSUE_KEY $TIME_SPENT "$COMMIT_MSG" $JIRA_USER_NAME $JIRA_PASSWORD $CORPORATE_URL

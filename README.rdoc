@@ -12,7 +12,9 @@ Save your JIRA username and password in environment. (For linux, run "sudo vim ~
   export PASSWORD="your jira password"
   export CORPORATE_URL="your corporate url"
 
-  Restart the terminal window after setting up the above credentials.
+Note: corporate url would be something this way: https://company-name.atlassian.net
+
+Restart the terminal window after setting up the above credentials.
 Install worklogger
 
   gem install worklogger
